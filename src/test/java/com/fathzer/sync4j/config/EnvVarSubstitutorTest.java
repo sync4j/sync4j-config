@@ -5,9 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class EnvVarSubstitutorTest {
     private Map<String, String> testEnvVars;
@@ -97,42 +101,23 @@ class EnvVarSubstitutorTest {
         assertEquals("Unclosed: ${TEST_VAR", result);
     }
     
-    @Test
-    void testFindUndefinedVarsNoneUndefined() {
-        Set<String> undefined = substitutor.findUndefinedVars("${TEST_VAR} and ${ANOTHER_VAR}");
-        assertTrue(undefined.isEmpty());
+    static Stream<Arguments> undefinedVarsCases() {
+        return Stream.of(
+            Arguments.of("${TEST_VAR} and ${ANOTHER_VAR}", Set.of()),
+            Arguments.of("${TEST_VAR} and ${UNDEFINED_VAR}", Set.of("UNDEFINED_VAR")),
+            Arguments.of("${TEST_VAR}, ${UNDEFINED_1}, ${ANOTHER_VAR}, ${UNDEFINED_2}", Set.of("UNDEFINED_1", "UNDEFINED_2")),
+            Arguments.of("No placeholders here", Set.of()),
+            Arguments.of("", Set.of()));
     }
-    
-    @Test
-    void testFindUndefinedVarsSingleUndefined() {
-        Set<String> undefined = substitutor.findUndefinedVars("${TEST_VAR} and ${UNDEFINED_VAR}");
-        assertEquals(1, undefined.size());
-        assertTrue(undefined.contains("UNDEFINED_VAR"));
-    }
-    
-    @Test
-    void testFindUndefinedVarsMultipleUndefined() {
-        Set<String> undefined = substitutor.findUndefinedVars(
-            "${TEST_VAR}, ${UNDEFINED_1}, ${ANOTHER_VAR}, ${UNDEFINED_2}");
-        assertEquals(2, undefined.size());
-        assertTrue(undefined.contains("UNDEFINED_1"));
-        assertTrue(undefined.contains("UNDEFINED_2"));
+
+    @ParameterizedTest
+    @MethodSource("undefinedVarsCases")
+    void testFindUndefinedVars(String input, Set<String> expected) {
+        assertEquals(expected, substitutor.findUndefinedVars(input));
     }
     
     @Test
     void testFindUndefinedVarsNullInput() {
         assertThrows(NullPointerException.class, () -> substitutor.findUndefinedVars(null));
-    }
-    
-    @Test
-    void testFindUndefinedVarsNoPlaceholders() {
-        Set<String> undefined = substitutor.findUndefinedVars("No placeholders here");
-        assertTrue(undefined.isEmpty());
-    }
-    
-    @Test
-    void testFindUndefinedVarsWithEmptyString() {
-        Set<String> undefined = substitutor.findUndefinedVars("");
-        assertTrue(undefined.isEmpty());
     }
 }

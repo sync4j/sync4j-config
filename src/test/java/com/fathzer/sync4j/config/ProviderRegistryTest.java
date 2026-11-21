@@ -16,14 +16,16 @@ import com.fathzer.sync4j.FileProviderFactory;
 import com.fathzer.sync4j.file.LocalProviderFactory;
 
 class ProviderRegistryTest {
-    private static final String JAR_FACTORY = "package jarplugin;\n"
-            + "public class JarProviderFactory implements com.fathzer.sync4j.FileProviderFactory<Void> {\n"
-            + "  public String type() { return \"jar-memory\"; }\n"
-            + "  public Class<Void> configType() { return Void.class; }\n"
-            + "  public com.fathzer.sync4j.util.IOLambda.IOFunction<String, com.fathzer.sync4j.FileProvider> create(Void config) {\n"
-            + "    return root -> new com.fathzer.sync4j.memory.MemoryFileProvider();\n"
-            + "  }\n"
-            + "}\n";
+    private static final String JAR_FACTORY = """
+            package jarplugin;
+            public class JarProviderFactory implements com.fathzer.sync4j.FileProviderFactory<Void> {
+              public String type() { return "jar-memory"; }
+              public Class<Void> configType() { return Void.class; }
+              public com.fathzer.sync4j.util.IOLambda.IOFunction<String, com.fathzer.sync4j.FileProvider> create(Void config) {
+                return root -> new com.fathzer.sync4j.memory.MemoryFileProvider();
+              }
+            }
+            """;
 
     @TempDir
     Path tmp;

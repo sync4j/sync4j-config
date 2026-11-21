@@ -54,6 +54,9 @@ public class ProviderRegistry {
      * @return the factory
      * @throws IOException if no factory is registered for this type
      */
+    // False positive: the registry contains factories of any configuration type, the wildcard tells the truth.
+    // A type parameter chosen by the caller would be an unchecked cast hidden in the signature.
+    @SuppressWarnings("java:S1452")
     public FileProviderFactory<?> get(String type) throws IOException {
         final FileProviderFactory<?> factory = factories.get(type);
         if (factory == null) {
