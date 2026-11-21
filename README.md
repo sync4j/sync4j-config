@@ -5,7 +5,7 @@
 [![Javadocs](https://www.javadoc.io/badge/com.fathzer/sync4j-config.svg)](https://www.javadoc.io/doc/com.fathzer/sync4j-config)
 [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=sync4j_sync4j-config&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sync4j_sync4j-config)
 
-Reads the description of [sync4j](https://github.com/fathzer/sync4j) synchronizations from a JSON configuration: *which* folders to synchronize, on *which* providers, with *which* filters.
+Reads the description of [sync4j](https://github.com/sync4j/sync4j) synchronizations from a JSON configuration: *which* folders to synchronize, on *which* providers, with *which* filters.
 
 It is used by programs that are driven by a configuration file, like [sync4j-web](https://github.com/sync4j/sync4j-web), and can be used by others (a command line, for instance).
 
