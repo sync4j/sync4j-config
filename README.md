@@ -1,5 +1,10 @@
 # sync4j-config
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.fathzer/sync4j-config)](https://search.maven.org/artifact/com.fathzer/sync4j-config)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Javadocs](https://www.javadoc.io/badge/com.fathzer/sync4j-config.svg)](https://www.javadoc.io/doc/com.fathzer/sync4j-config)
+[![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=sync4j_sync4j-config&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sync4j_sync4j-config)
+
 Reads the description of [sync4j](https://github.com/fathzer/sync4j) synchronizations from a JSON configuration: *which* folders to synchronize, on *which* providers, with *which* filters.
 
 It is used by programs that are driven by a configuration file, like [sync4j-web](https://github.com/sync4j/sync4j-web), and can be used by others (a command line, for instance).
