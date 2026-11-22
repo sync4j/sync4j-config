@@ -13,6 +13,16 @@ It is used by programs that are driven by a configuration file, like [sync4j-web
 
 - Java 17
 
+## Installation
+
+```xml
+<dependency>
+    <groupId>com.fathzer</groupId>
+    <artifactId>sync4j-config</artifactId>
+    <version>0.0.2</version>
+</dependency>
+```
+
 ## The description of a synchronization
 
 ```json
@@ -45,7 +55,7 @@ for (Library library : config.libraries()) {
 }
 ```
 
-`FolderLocation.withSuffix("sub/folder")` returns a location on a sub folder (the original location is not modified). If a destination folder was just created, opening it is tried again a few times, because some storages need a little time to show a new folder.
+`FolderLocation.withSuffix("sub/folder")` returns a location on a sub folder (the original location is not modified). The suffix can't go out of the location: a suffix with an empty name, `.`, `..`, a backslash or a null character is refused (`IllegalArgumentException`), because it often comes from a less trusted source than the configuration, a request of a user for instance. If a destination folder was just created, opening it is tried again a few times, because some storages need a little time to show a new folder.
 
 ## Providers
 

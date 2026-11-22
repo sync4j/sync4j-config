@@ -68,11 +68,32 @@ public class FolderLocation {
 
     /**
      * Returns a location with the same provider and path, but with a suffix.
-     * @param suffix the suffix (a leading slash is added if missing)
+     * <br>The suffix designates a sub folder of the location: it can't go out of it. It often comes from a less trusted source than the configuration
+     * (a request of a user, for instance): a suffix such as <code>../other</code> would let it synchronize (and delete) another folder.
+     * @param suffix the suffix, a relative path (a leading slash is added if missing, a trailing one is removed)
      * @return a new location, this location is not modified
+     * @throws IllegalArgumentException if the suffix is not a sub folder: empty, or with an empty name, <code>.</code>, <code>..</code>, a backslash
+     * (a separator on Windows) or a null character
      */
     public FolderLocation withSuffix(String suffix) {
-        return new FolderLocation(provider, path, suffix.startsWith("/") ? suffix : "/" + suffix, openAttempts, openDelay);
+        return new FolderLocation(provider, path, checkSuffix(suffix), openAttempts, openDelay);
+    }
+
+    private static String checkSuffix(String suffix) {
+        String result = suffix.startsWith("/") ? suffix : "/" + suffix;
+        if (result.length() > 1 && result.endsWith("/")) {
+            result = result.substring(0, result.length() - 1);
+        }
+        if (result.contains("\\") || result.indexOf('\0') >= 0) {
+            throw new IllegalArgumentException("Suffix (" + suffix + ") can't contain a backslash or a null character");
+        }
+        final String[] names = result.substring(1).split("/", -1);
+        for (String name : names) {
+            if (name.isBlank() || ".".equals(name) || "..".equals(name)) {
+                throw new IllegalArgumentException("Suffix (" + suffix + ") should be a sub folder, without empty names, . or ..");
+            }
+        }
+        return result;
     }
 
     /**

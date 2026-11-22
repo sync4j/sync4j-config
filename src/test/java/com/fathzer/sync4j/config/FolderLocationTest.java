@@ -92,6 +92,17 @@ class FolderLocationTest {
     } 
 
     @Test
+    void testTheSuffixCanNotGoOutOfTheLocation() {
+        FolderLocation location = new FolderLocation(PROV_FUNC, "/test/path");
+        for (String suffix : new String[] {"..", "/..", "../other", "a/../../other", "./a", "a/.", "a//b", "", "/", " ", "a/ /b", "..\\\\other", "a\0b"}) {
+            assertThrows(IllegalArgumentException.class, () -> location.withSuffix(suffix), suffix);
+        }
+        // A trailing slash is tolerated, and names that only start with dots are names
+        assertEquals("/a/b", location.withSuffix("a/b/").suffix());
+        assertEquals("/.hidden/..x", location.withSuffix("/.hidden/..x").suffix());
+    }
+
+    @Test
     void testWithSuffix_NullSuffix() {
         // Given
         String basePath = "/test/path";
